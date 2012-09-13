@@ -128,7 +128,16 @@ class XML(unittest.TestCase):
 </root>
 """)
 
+    def test_spaces_in_tagname(self):
+        buffer = StringIO()
+        with self.assertRaises(ValueError):
+            with elementflow.xml(buffer, u'root with space', indent = True, text_wrap = False) as xml:
+                pass
 
+        buffer = StringIO()
+        with self.assertRaises(ValueError):
+            with elementflow.xml(buffer, u'root', indent = True, text_wrap = False) as xml:
+                xml.container(u'element with space')
 
 if __name__ == '__main__':
     unittest.main()

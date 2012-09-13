@@ -29,6 +29,7 @@ Pretty-printing::
 '''
 import textwrap
 import codecs
+import re
 
 def escape(value):
     if '&' not in value and '<' not in value:
@@ -78,6 +79,8 @@ class XMLGenerator(object):
         Opens a new element containing sub-elements and text nodes.
         Intends to be used under ``with`` statement.
         '''
+        if re.search(ur'\s', name):
+            raise ValueError('Element name cannot contain whitespace')
         self.file.write(u'<%s%s>' % (name, attr_str(attrs)))
         self.stack.append(name)
         return self
@@ -86,6 +89,8 @@ class XMLGenerator(object):
         '''
         Generates a single element, either empty or with a text contents.
         '''
+        if re.search(ur'\s', name):
+            raise ValueError('Element name cannot contain whitespace')
         if text:
             self.file.write(u'<%s%s>%s</%s>' % (name, attr_str(attrs), escape(text), name))
         else:
